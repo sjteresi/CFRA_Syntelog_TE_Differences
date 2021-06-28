@@ -29,9 +29,10 @@ filter_TEs:
 	@echo Filtering 1008/2339 TEs into appropriate format for TE Density
 	python $(ROOT_DIR)/src/import_strawberry_EDTA.py $(DEV_1008_TEs) 2339
 
-#calculate_TE_Density:
-#	@echo Running TE Density for blueberry
-#	sbatch $(ROOT_DIR)/src/TE_Density_Blueberry.sb
+calculate_TE_Density:
+	@echo Running TE Density for 562
+	sbatch $(ROOT_DIR)/src/TE_Density_562.sb
+	@echo
 #
 #generate_expression_graphs:
 #	@echo Generating TE density vs. gene expression graphs
