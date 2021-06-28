@@ -6,7 +6,7 @@
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 DEV_DATA := $(realpath $(ROOT_DIR)/data/)
 DEV_562_GENES := $(DEV_DATA)/maker_annotation.562.gff_sorted.gff
-DEV_1008_GENES := $(DEV_DATA)/1008_2339.maker_annotation.gff_sorted.gff
+DEV_1008_GENES := $(DEV_DATA)/2339.maker_annotation.gff_sorted.gff
 DEV_562_TEs := $(DEV_DATA)/562_NewNames.fasta.mod.EDTA.TEanno.gff3
 DEV_1008_TEs := $(DEV_DATA)/1008.fasta.mod.EDTA.TEanno.gff3
 #DEV_TES := $(DEV_DATA)/TEs/Blueberry_EDTA_TEs.gff
