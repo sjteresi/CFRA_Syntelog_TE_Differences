@@ -1,7 +1,7 @@
 #!/usr/bin/env/python
 
 """
-Compare TE Density values between orthologs
+Compare TE Density values between syntelogs
 """
 
 __author__ = "Scott Teresi"
@@ -14,64 +14,60 @@ import pandas as pd
 import numpy as np
 from collections import namedtuple
 
-import time
-
 from transposon.gene_data import GeneData
 from transposon.density_data import DensityData
 from transposon.import_filtered_genes import import_filtered_genes
+
+# TODO refactor
 from examples.Rice_Synteny.src.bargraphs import graph_barplot_density_differences
 
 
-def read_ortholog_table(rice_ortholog_table):
+def check_nulls(my_df, logger):
     """
-    Read a pandaframe from disk
+    Check for rows with an null values in the supplied Pandas DataFrame
 
     Args:
-        rice_ortholog_table (str): Path to pandaframe saved on disk which is in
-        .tsv format with the columns specified below
+        my_df (Pandas DataFrame):
 
-    Returns:
-        dataframe (pandas.DataFrame): Pandas dataframe of the file that was
-        provided
+        logger ():
+
     """
-    dataframe = pd.read_csv(
-        rice_ortholog_table,
-        sep="\t",
-        header="infer",
+    # NB check for NAN and report to user
+    nas = my_df[my_df.isna().any(axis=1)]
+    if not nas.empty:
+        logger.warning("Rows where null exist: %s" % nas)
+
+
+def import_syntelogs(syntelog_input_file):
+    """
+    Import the syntelogs from the raw file and manage data filtration
+    """
+
+    col_names = [
+        "1008_2339_Gene",
+        "562_Gene",
+    ]
+
+    syntelog_table = pd.read_csv(
+        syntelog_input_file,
+        header=None,
+        names=col_names,
+        engine="python",
+        comment="#",
         dtype={
-            "OrgA_Chromosome": str,
-            "Glaberrima": str,
-            "OrgB_Chromosome": str,
-            "Sativa": str,
-            "E_Value": "float64",
+            "1008_2339_Gene": str,
+            "562_Gene": str,
         },
-        na_values=["NA"],
     )
-    return dataframe
 
-
-def save_ortholog_table(ortholog_table, filename, output_dir, logger):
-    """
-    Saves an ortholog table (pandas.DataFrame) to disk
-
-    Args:
-        ortholog_table (pandas.DataFrame): A pandas dataframe of ortholog
-        relationships between genes
-
-        filename (str): String representing the name of the panda frame the
-        user intends to save
-
-        output_dir (str): The path to the output directory
-
-        logger (logging.Logger): Object to pass logging commands through
-
-    Returns:
-        None
-    """
-    logger.info("Saving data to: %s" % (os.path.join(output_dir, filename)))
-    ortholog_table.to_csv(
-        os.path.join(output_dir, filename), sep="\t", header="True", index=False
+    # Get the correct name for the genes
+    # MAGIC to split the name correctly
+    syntelog_table["1008_2339_Gene"] = syntelog_table["1008_2339_Gene"].str.replace(
+        "-mRNA-1", ""
     )
+    syntelog_table["562_Gene"] = syntelog_table["562_Gene"].str.replace("-mRNA-1", "")
+
+    return syntelog_table
 
 
 def identify_indices_of_syntelogs(
@@ -331,9 +327,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "ortholog_input_file",
-        type=str,
-        help="parent path to ortholog file",
+        "syntelog_input_file", type=str, help="parent path of syntelog file"
     )
 
     parser.add_argument(
@@ -369,7 +363,21 @@ if __name__ == "__main__":
         help="parent directory to output results",
     )
     args = parser.parse_args()
-    args.ortholog_input_file = os.path.abspath(args.ortholog_input_file)
+    args.syntelog_input_file = os.path.abspath(args.syntelog_input_file)
+    ###############################################
+    # TODO refactor for the strawberry syntelogs
+    logger.info("Importing syntelogs: %s" % syntelog_input_file)
+    syntelogs = import_syntelogs(syntelog_input_file)
+    check_nulls(syntelogs, logger)
+    file_to_save = os.path.join(data_output_path, "set_syntelogs.tsv")
+    logger.info("Writing syntelog data to disk: %s" % file_to_save)
+    syntelogs.to_csv(file_to_save, sep="\t", header=True, index=False)
+
+    # TODO going to have to add chromosome information to the syntelog table to
+    # make it easier to access the correct information from the HDF5. Need to
+    # use the cleaned gene data file and use that to add the chromosome
+    # information to the syntelog table.
+    ##############################################
 
     args.sativa_chromosome_1 = os.path.abspath(args.sativa_chromosome_1)
     args.glaberrima_chromosome_1 = os.path.abspath(args.glaberrima_chromosome_1)
@@ -382,8 +390,8 @@ if __name__ == "__main__":
     coloredlogs.install(level=log_level)
 
     # Begin reading files:
-    logger.info("Reading ortholog input file: %s" % (args.ortholog_input_file))
-    orthologs = read_ortholog_table(args.ortholog_input_file)
+    logger.info("Reading ortholog input file: %s" % (args.syntelog_input_file))
+    orthologs = read_ortholog_table(args.syntelog_input_file)
 
     orthologs = orthologs.loc[
         (orthologs["OrgA_Chromosome"] == "1") & (orthologs["OrgB_Chromosome"] == "1")

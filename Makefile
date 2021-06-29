@@ -33,9 +33,10 @@ calculate_TE_Density:
 	@echo Running TE Density for 562
 	sbatch $(ROOT_DIR)/src/TE_Density_562.sb
 	@echo
-#
-#generate_expression_graphs:
-#	@echo Generating TE density vs. gene expression graphs
-#	@echo 
-#	mkdir -p $(ROOT_DIR)/results/graphs
-#	python $(ROOT_DIR)/src/compare_expression.py $(DEV_GENE_EXPRESSION) $(DEV_GENES) $(DEV_DENSITY_FILES) -o $(ROOT_DIR)/results/graphs
+
+
+compare_syntelog_TE_differences:
+	@echo  Generate graphs of syntelog TE differences
+	@echo This is for chromosome 1
+	mkdir -p $(ROOT_DIR)/results/graphs
+	python $(ROOT_DIR)/src/compare_density.py $(DEV_DATA)/CFRA2339_CFRA562_Syntelogs.csv $(DEV_HDF5)/Sativa/Sativa_1.h5 $(DEV_HDF5)/Glaberrima/Glaberrima_1.h5 $(ROOT_DIR)/results/Cleaned_562_Genes.tsv $(ROOT_DIR)/results/Cleaned_2339_Genes.tsv -o $(ROOT_DIR)/results
