@@ -88,30 +88,6 @@ def read_syntelog_table(strawberry_syntelog_table):
     return dataframe
 
 
-def supply_density_data_files(path_to_folder):
-    """
-    Iterate over a folder containing the H5 files of TE Density output and
-    return a list of absolute file paths.
-
-    Args:
-        path_to_folder (str): path to the folder containing multiple h5 files
-        of density data
-
-    Returns:
-        raw_file_list (list of str): A list containing the absolute paths to
-        each relevant H5 file of density data
-    """
-    raw_file_list = []  # init empty list to store filenames
-    for root, dirs, files in os.walk(path_to_folder):
-        for a_file_object in files:
-            # N.B very particular usage of abspath and join.
-            a_file_object = os.path.abspath(os.path.join(root, a_file_object))
-            if a_file_object.endswith(".h5"):  # MAGIC
-                raw_file_list.append(a_file_object)
-
-    return raw_file_list
-
-
 def save_syntelog_table(syntelog_table, filename, output_dir, logger):
     """
     Saves an syntelog table (pandas.DataFrame) to disk
@@ -267,35 +243,6 @@ def edit_syntelog_table(syntelogs, gene_pandaframe_562, gene_pandaframe_1008):
         columns=["Feature", "Start", "Stop", "Strand", "Length"], inplace=True
     )
     return syntelogs_w_chromosomes
-
-
-def return_list_density_data_objs(
-    list_of_gene_data, HDF5_folder, file_substring, logger
-):
-    """
-    Returns a list of DensityData instances from a list of GeneData and
-    HDF5 files that are gathered from an input directory
-
-    Args:
-        list_of_gene_data (list): List of GeneData instances
-        HDF5_folder (str): Path to HDF5 folder containing results
-        file_substring (str, MAGIC): MAGIC substring with which to identify the
-            genome and chromosome IDs.
-
-    Returns: processed_density_data (list of DensityData)
-    """
-    processed_density_data = []
-    for raw_hdf5_data_file in supply_density_data_files(HDF5_folder):
-        current_hdf5_file_chromosome = re.search(
-            file_substring, raw_hdf5_data_file
-        ).group(1)
-        for gene_data_obj in list_of_gene_data:
-            if gene_data_obj.chromosome_unique_id == current_hdf5_file_chromosome:
-                dd_data_obj = DensityData.verify_h5_cache(
-                    raw_hdf5_data_file, gene_data_obj, logger
-                )
-                processed_density_data.append(dd_data_obj)
-    return processed_density_data
 
 
 def add_indices_of_genes_in_HDF5_to_syntelog_table(
