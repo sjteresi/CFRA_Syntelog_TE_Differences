@@ -247,9 +247,7 @@ if __name__ == "__main__":
                     # This is after all the chromosome loops finish (complete genome
                     # set), but we are still looping on window and te_grouping
                     genes_562_in_graphing_table = graphing_table["562_Gene"].tolist()
-                    genes_1008_in_graphing_table = graphing_table[
-                        "1008_2339_Gene"
-                    ].tolist()
+                    genes_1008_in_graphing_table = graphing_table["1008_Gene"].tolist()
 
                     # There are missing genes, genes present in the unbiased
                     # file that were not in the TE Density data
@@ -268,7 +266,7 @@ if __name__ == "__main__":
                     # if gene is in the list of unbiased genes
 
                     graphing_table.loc[
-                        graphing_table["1008_2339_Gene"].isin(unbiased_genes_1008),
+                        graphing_table["1008_Gene"].isin(unbiased_genes_1008),
                         "Bias_1008",
                     ] = "Y"
                     graphing_table.loc[

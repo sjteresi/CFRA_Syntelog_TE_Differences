@@ -63,23 +63,23 @@ add_syntelog_HDF5_indices:
 generate_graphs_562:
 	@echo Generating TE density syntelog comparison graphs
 	mkdir -p $(DEV_562_RESULTS)
-	@echo Generating graphs for 562 at 10X 
-	python $(ROOT_DIR)/src/compare_biased_exp_w_density.py $(DEV_PROCESSED_SYNTELOGS) $(DEV_562_DENSITY_DATA) $(DEV_1008_DENSITY_DATA) $(DEV_562_GENE_DATA) $(DEV_1008_GENE_DATA) $(DEV_562_BIASED_GENES_10X) 562 10 -o $(DEV_562_RESULTS)
-	@echo Generating graphs for 562 at 5X
-	python $(ROOT_DIR)/src/compare_biased_exp_w_density.py $(DEV_PROCESSED_SYNTELOGS) $(DEV_562_DENSITY_DATA) $(DEV_1008_DENSITY_DATA) $(DEV_562_GENE_DATA) $(DEV_1008_GENE_DATA) $(DEV_562_BIASED_GENES_5X) 562 5 -o $(DEV_562_RESULTS)
 	@echo Generating graphs for 562 at 2X
 	python $(ROOT_DIR)/src/compare_biased_exp_w_density.py $(DEV_PROCESSED_SYNTELOGS) $(DEV_562_DENSITY_DATA) $(DEV_1008_DENSITY_DATA) $(DEV_562_GENE_DATA) $(DEV_1008_GENE_DATA) $(DEV_562_BIASED_GENES_2X) 562 2 -o $(DEV_562_RESULTS)
+	@echo Generating graphs for 562 at 5X
+	python $(ROOT_DIR)/src/compare_biased_exp_w_density.py $(DEV_PROCESSED_SYNTELOGS) $(DEV_562_DENSITY_DATA) $(DEV_1008_DENSITY_DATA) $(DEV_562_GENE_DATA) $(DEV_1008_GENE_DATA) $(DEV_562_BIASED_GENES_5X) 562 5 -o $(DEV_562_RESULTS)
+	@echo Generating graphs for 562 at 10X 
+	python $(ROOT_DIR)/src/compare_biased_exp_w_density.py $(DEV_PROCESSED_SYNTELOGS) $(DEV_562_DENSITY_DATA) $(DEV_1008_DENSITY_DATA) $(DEV_562_GENE_DATA) $(DEV_1008_GENE_DATA) $(DEV_562_BIASED_GENES_10X) 562 10 -o $(DEV_562_RESULTS)
 
 generate_graphs_1008:
 	# Functionally equivalent to generate_graphs_562 except for the use of input files
 	@echo Generating TE density syntelog comparison graphs
 	mkdir -p $(DEV_1008_RESULTS)
-	@echo Generating graphs for 1008 at 10X 
-	python $(ROOT_DIR)/src/compare_biased_exp_w_density.py $(DEV_PROCESSED_SYNTELOGS) $(DEV_562_DENSITY_DATA) $(DEV_1008_DENSITY_DATA) $(DEV_562_GENE_DATA) $(DEV_1008_GENE_DATA) $(DEV_1008_BIASED_GENES_10X) 1008 10 -o $(DEV_1008_RESULTS)
-	@echo Generating graphs for 1008 at 5X
-	python $(ROOT_DIR)/src/compare_biased_exp_w_density.py $(DEV_PROCESSED_SYNTELOGS) $(DEV_562_DENSITY_DATA) $(DEV_1008_DENSITY_DATA) $(DEV_562_GENE_DATA) $(DEV_1008_GENE_DATA) $(DEV_1008_BIASED_GENES_5X) 1008 5 -o $(DEV_1008_RESULTS)
 	@echo Generating graphs for 1008 at 2X
 	python $(ROOT_DIR)/src/compare_biased_exp_w_density.py $(DEV_PROCESSED_SYNTELOGS) $(DEV_562_DENSITY_DATA) $(DEV_1008_DENSITY_DATA) $(DEV_562_GENE_DATA) $(DEV_1008_GENE_DATA) $(DEV_1008_BIASED_GENES_2X) 1008 2 -o $(DEV_1008_RESULTS)
+	@echo Generating graphs for 1008 at 5X
+	python $(ROOT_DIR)/src/compare_biased_exp_w_density.py $(DEV_PROCESSED_SYNTELOGS) $(DEV_562_DENSITY_DATA) $(DEV_1008_DENSITY_DATA) $(DEV_562_GENE_DATA) $(DEV_1008_GENE_DATA) $(DEV_1008_BIASED_GENES_5X) 1008 5 -o $(DEV_1008_RESULTS)
+	@echo Generating graphs for 1008 at 10X 
+	python $(ROOT_DIR)/src/compare_biased_exp_w_density.py $(DEV_PROCESSED_SYNTELOGS) $(DEV_562_DENSITY_DATA) $(DEV_1008_DENSITY_DATA) $(DEV_562_GENE_DATA) $(DEV_1008_GENE_DATA) $(DEV_1008_BIASED_GENES_10X) 1008 10 -o $(DEV_1008_RESULTS)
 
 generate_unbiased_graphs:
 	@echo Generating TE density syntelog comparison graphs

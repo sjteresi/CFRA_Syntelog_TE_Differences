@@ -230,7 +230,7 @@ def edit_syntelog_table(syntelogs, gene_pandaframe_562, gene_pandaframe_1008):
 
     Args:
         syntelogs (pandas.Data.Frame): Pandaframe representing the syntelogs.
-            Has format columns=['1008_2339_Gene', '562_Gene']
+            Has format columns=['1008_Gene', '562_Gene']
         gene_pandaframe_562 (pandas.Data.Frame): Pandaframe representing the
             GeneData info for the 562 genome.
         gene_pandaframe_1008 (pandas.Data.Frame): Pandaframe representing the
@@ -238,7 +238,7 @@ def edit_syntelog_table(syntelogs, gene_pandaframe_562, gene_pandaframe_1008):
 
     Returns:
         syntelogs_w_chromosomes (pandas.Data.Frame): Has format
-        columns=['1008_2339_Gene', '562_Gene', '562_Chromosome',
+        columns=['1008_Gene', '562_Gene', '562_Chromosome',
         '1008_Chromosome']
     """
     syntelogs_w_chromosomes = pd.merge(
@@ -253,11 +253,11 @@ def edit_syntelog_table(syntelogs, gene_pandaframe_562, gene_pandaframe_1008):
     syntelogs_w_chromosomes.drop(
         columns=["Feature", "Start", "Stop", "Strand", "Length"], inplace=True
     )
-    # 1008_2339
+    # 1008
     syntelogs_w_chromosomes = pd.merge(
         left=syntelogs_w_chromosomes,
         right=gene_pandaframe_1008,
-        left_on="1008_2339_Gene",
+        left_on="1008_Gene",
         right_on="Gene_Name",
     )
     syntelogs_w_chromosomes.rename(
@@ -309,7 +309,7 @@ def add_indices_of_genes_in_HDF5_to_syntelog_table(
     Args:
         list_of_density_data (list):
         gene_list (list): list of genes from the syntelog table
-        syntelog_table (pandas.Data.Frame): columns=['1008_2339_Gene', '562_Gene', '562_Chromosome',
+        syntelog_table (pandas.Data.Frame): columns=['1008_Gene', '562_Gene', '562_Chromosome',
         '1008_Chromosome']
         genome_substring_col_to_create (str): String identifer for the new
             column to be created which represents the index values of the genes in

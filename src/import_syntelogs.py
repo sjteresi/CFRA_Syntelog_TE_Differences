@@ -41,6 +41,8 @@ def import_syntelogs(syntelog_input_file, data_output_path, filename_to_save):
     )
 
     file_to_save = os.path.join(data_output_path, filename_to_save)
+    syntelog_table.rename(columns={"1008_2339_Gene": "1008_Gene"}, inplace=True)
+
     syntelog_table.to_csv(file_to_save, sep="\t", header=True, index=False)
 
 

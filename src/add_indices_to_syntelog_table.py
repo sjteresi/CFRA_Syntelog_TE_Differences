@@ -154,7 +154,7 @@ if __name__ == "__main__":
 
     # Create lists of the genes for each genome
     fragaria_562_orth_genes = syntelogs_w_chromosomes["562_Gene"].tolist()
-    fragaria_1008_orth_genes = syntelogs_w_chromosomes["1008_2339_Gene"].tolist()
+    fragaria_1008_orth_genes = syntelogs_w_chromosomes["1008_Gene"].tolist()
 
     syntelogs_w_chromosomes = add_indices_of_genes_in_HDF5_to_syntelog_table(
         processed_562_density_data,
