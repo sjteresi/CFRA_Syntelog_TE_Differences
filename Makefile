@@ -13,7 +13,6 @@ DEV_562_GENES := $(DEV_DATA)/maker_annotation.562.gff_sorted.gff
 DEV_1008_GENES := $(DEV_DATA)/2339.maker_annotation.gff_sorted.gff
 DEV_562_TEs := $(DEV_DATA)/562_NewNames.fasta.mod.EDTA.TEanno.gff3
 DEV_1008_TEs := $(DEV_DATA)/1008_2339_NewNames.fasta.mod.EDTA.TEanno.gff3
-
 DEV_RAW_SYNTELOGS := $(DEV_DATA)/CFRA2339_CFRA562_Syntelogs.csv
 DEV_SYNTELOGS := $(DEV_RESULTS)/set_syntelogs.tsv
 DEV_562_DENSITY_DATA := $(DEV_RESULTS)/finalized_data/562_TE_Density
@@ -28,6 +27,14 @@ DEV_562_BIASED_GENES_2X :=$(DEV_DATA)/Fv562_2x_Bias.txt
 DEV_1008_BIASED_GENES_2X :=$(DEV_DATA)/Fv2339_2x_Bias.txt
 DEV_PROCESSED_SYNTELOGS := $(DEV_RESULTS)/Syntelog_Matches.tsv
 DEV_UNBIASED_GENES := $(DEV_DATA)/Fv2339_n_Fv562_Unbiased.txt
+
+# H4 Related Analyses
+DEV_H4_GENES := $(DEV_DATA)/H4/H4_Genes.gtf
+DEV_H4_TEs := $(DEV_DATA)/H4/F_vesca_H4_V4.1.fasta.mod.EDTA.TEanno.gff
+DEV_H4_GENE_DATA := $(DEV_RESULTS)/filtered_input_data/Cleaned_H4_Genes.tsv
+DEV_H4_DENSITY_DATA := $(DEV_RESULTS)/finalized_data/H4_TE_Density
+DEV_H4_RESULTS := $(DEV_RESULTS)/graphs/H4
+
 
 
 
@@ -86,3 +93,17 @@ generate_unbiased_graphs:
 	@echo 
 	mkdir -p $(DEV_UNBIASED_RESULTS)
 	python $(ROOT_DIR)/src/compare_unbiased_exp_w_density.py $(DEV_PROCESSED_SYNTELOGS) $(DEV_562_DENSITY_DATA) $(DEV_1008_DENSITY_DATA) $(DEV_562_GENE_DATA) $(DEV_1008_GENE_DATA) $(DEV_UNBIASED_GENES) -o $(DEV_UNBIASED_RESULTS)
+
+# Code relevant to H4
+H4_filter_TEs:
+	@echo Filtering H4 TEs into appropriate format for TE Density
+	python $(ROOT_DIR)/src/H4/import_strawberry_H4_EDTA.py $(DEV_H4_TEs) H4 --o $(ROOT_DIR)/results/filtered_input_data
+
+H4_filter_genes:
+	@echo Filtering H4 genes into appropriate format for TE Density
+	python $(ROOT_DIR)/src/H4/import_strawberry_H4_gene_anno.py $(DEV_H4_GENES) H4 --o $(ROOT_DIR)/results/filtered_input_data
+
+H4_dotplot:
+	@echo Generating dotplot for H4
+	mkdir -p $(DEV_H4_RESULTS)
+	python $(ROOT_DIR)/src/H4/new_h4_dotplot.py $(DEV_H4_DENSITY_DATA) $(DEV_H4_GENE_DATA) -o $(DEV_H4_RESULTS)

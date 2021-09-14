@@ -23,7 +23,6 @@ from TE_Density.transposon.import_filtered_genes import import_filtered_genes
 from src.bias_utils import verify_te_type_sequence
 from src.bias_utils import verify_window_sequence
 from src.bias_utils import verify_te_index_dictionary_sequence
-from src.bias_utils import return_list_density_data_objs
 from src.bias_utils import add_TE_values_to_table
 from src.bias_utils import find_missing_genes
 from src.bias_utils import read_processed_syntelog_table
@@ -138,14 +137,14 @@ if __name__ == "__main__":
     ]
 
     # Initialize all DensityData objects for 562
-    processed_562_density_data = return_list_density_data_objs(
+    processed_562_density_data = DensityData.from_list_gene_data_and_hdf5_dir(
         gene_data_562_list,
         args.density_562_data_folder,
         "Fragaria_562_(.*?).h5",
         logger,
     )
     # Initialize all DensityData objects for 1008
-    processed_1008_density_data = return_list_density_data_objs(
+    processed_1008_density_data = DensityData.from_list_gene_data_and_hdf5_dir(
         gene_data_1008_list,
         args.density_1008_data_folder,
         "Fragaria_1008_2339_(.*?).h5",
