@@ -336,7 +336,8 @@ if __name__ == "__main__":
     processed_H4_density_data = DensityData.from_list_gene_data_and_hdf5_dir(
         gene_data_H4_list,
         args.density_H4_data_folder,
-        "H4_(Fvb(\d)).h5",
+        "Fragaria_562_(562_scaffold_(\d)).h5",
+        # "H4_(Fvb(\d)).h5",
         logger,
     )
 

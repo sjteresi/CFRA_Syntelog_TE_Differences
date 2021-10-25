@@ -72,7 +72,6 @@ def import_transposons(tes_input_path, te_annot_renamer, genome_name, logger):
         },
     )
 
-
     # Drop extraneous columns
     TE_Data.drop(columns=["Score", "Software", "Phase", "Feature"], inplace=True)
 
@@ -102,14 +101,16 @@ def import_transposons(tes_input_path, te_annot_renamer, genome_name, logger):
         chromosomes_i_want = ["562_scaffold_" + str(i) for i in range(8)]
     if genome_name == "2339":
         chromosomes_i_want = [str(i) for i in range(8)]
+    if genome_name == "H4":
+        chromosomes_i_want = ["Fvb" + str(i) for i in range(8)]
     TE_Data = TE_Data.loc[TE_Data["Chromosome"].isin(chromosomes_i_want)]
     diagnostic(TE_Data)
 
     if genome_name == "2339":
-        TE_Data['Chromosome'] = "Fvb" + TE_Data['Chromosome']
-        print(TE_Data)
+        TE_Data["Chromosome"] = "Fvb" + TE_Data["Chromosome"]
 
     return TE_Data
+
 
 def diagnostic(TE_Data):
     print(sorted(TE_Data["Order"].unique().tolist()))
