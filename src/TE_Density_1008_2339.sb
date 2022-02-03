@@ -23,4 +23,4 @@ source /mnt/research/edgerpat_lab/Scotty/venvs/CFRA_TE_Density/bin/activate
 cd /mnt/research/edgerpat_lab/Scotty/CFRA_Syntelog_TE_Differences/
 
 # Run the code
-python $ROOT_DIR/process_genome.py $DATA_DIR/filtered_input_data/Cleaned_2339_Genes.tsv $DATA_DIR/filtered_input_data/Cleaned_2339_EDTA_TEs.tsv $GENOME -c $ROOT_DIR/config/production_run_config.ini  -n 7 --reset_h5 -o $DATA_DIR --tmp_overlap $DATA_DIR/tmp_overlap
+python $ROOT_DIR/process_genome.py $DATA_DIR/filtered_input_data/Cleaned_2339_Genes.tsv $DATA_DIR/filtered_input_data/Cleaned_2339_EDTA_TEs.tsv $GENOME -c $ROOT_DIR/config/production_run_config.ini  -n 7 --reset_h5 -o $DATA_DIR

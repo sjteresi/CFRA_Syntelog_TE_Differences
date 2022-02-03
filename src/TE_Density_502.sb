@@ -1,15 +1,15 @@
 #!/bin/bash -login
 
-#SBATCH -J H4_TE_Density
+#SBATCH -J 502_TE_Density
 #SBATCH --time=12:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=7
 #SBATCH --mem-per-cpu=45G
-#SBATCH -o /mnt/research/edgerpat_lab/Scotty/CFRA_Syntelog_TE_Differences/results/H4_Density.out
+#SBATCH -o /mnt/research/edgerpat_lab/Scotty/CFRA_Syntelog_TE_Differences/results/502_Density.out
 #--------------------------------------------------------
 ROOT_DIR=/mnt/research/edgerpat_lab/Scotty/CFRA_Syntelog_TE_Differences/TE_Density
 DATA_DIR=/mnt/research/edgerpat_lab/Scotty/CFRA_Syntelog_TE_Differences/results
-GENOME="H4"
+GENOME="Fragaria_502"
 
 
 # Load the Python scripts
@@ -23,4 +23,4 @@ source /mnt/research/edgerpat_lab/Scotty/venvs/CFRA_TE_Density/bin/activate
 cd /mnt/research/edgerpat_lab/Scotty/CFRA_Syntelog_TE_Differences/
 
 # Run the code
-python $ROOT_DIR/process_genome.py $DATA_DIR/filtered_input_data/Cleaned_H4_Genes.tsv $DATA_DIR/filtered_input_data/Cleaned_H4_EDTA_TEs.tsv $GENOME -c $ROOT_DIR/config/production_run_config.ini  -n 7 --reset_h5 -o $DATA_DIR
+python $ROOT_DIR/process_genome.py $DATA_DIR/filtered_input_data/Cleaned_502_Genes.tsv $DATA_DIR/filtered_input_data/Cleaned_502_EDTA_TEs.tsv $GENOME -c $ROOT_DIR/config/production_run_config.ini  -n 7 --reset_h5 -o $DATA_DIR
