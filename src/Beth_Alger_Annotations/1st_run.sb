@@ -1,0 +1,30 @@
+#!/bin/bash -login
+
+#SBATCH -J EDTA_Frag_2339
+#SBATCH --time=74:00:00
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=10
+#SBATCH --array=1-4
+#SBATCH --mem-per-cpu=30G
+
+#-----------------------------------------------------------------------------------------
+# __author__ = Beth Alger
+module load Conda/3
+conda activate EDTA
+
+all_genomes="$1"
+all_cds="$2"
+
+genomes=$(sed -n ${SLURM_ARRAY_TASK_ID}p $all_genomes)
+
+cds=$(sed -n ${SLURM_ARRAY_TASK_ID}p $all_cds)
+
+#directory with genomes and CDS files
+GENOMES_dir=/mnt/home/algereli/vesca_TEs_EDTA/EDTA
+
+#working directory
+cd /mnt/home/algereli/vesca_TEs_EDTA/EDTA
+
+perl /mnt/home/algereli/EDTA/EDTA_raw.pl --genome $GENOMES_dir/$genomes --species others -t 10 --type tir
+
+perl /mnt/home/algereli/EDTA/EDTA.pl --overwrite 0 --genome $GENOMES_dir/$genomes --species others -t 10 --cds $GENOMES_dir/$genomes --anno 1 --sensitive 1

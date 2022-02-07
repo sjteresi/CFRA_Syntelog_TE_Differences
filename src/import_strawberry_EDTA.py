@@ -72,7 +72,6 @@ def import_transposons(tes_input_path, te_annot_renamer, genome_name, logger):
         },
     )
 
-
     # Drop extraneous columns
     TE_Data.drop(columns=["Score", "Software", "Phase", "Feature"], inplace=True)
 
@@ -97,19 +96,34 @@ def import_transposons(tes_input_path, te_annot_renamer, genome_name, logger):
 
     # MAGIC I only want the first 7
     # MAGIC chromosome/scaffold names
+    # NOTE this is kind of bad form to be doing things this way, alternatively
+    # could provide some sort of input arg to handle the chromosomes I want but
+    # this is easiest to hard-code it in.
+    # NOTE chromosomes_i_want is a string variable that is set per genome and
+    # used to subset the dataframe by chromosome ID
     if genome_name == "562":
+        # NOTE prepend a chromosome name to the integers of chromosome IDs
         TE_Data["Chromosome"] = "562_scaffold_" + TE_Data["Chromosome"]
         chromosomes_i_want = ["562_scaffold_" + str(i) for i in range(8)]
+
     if genome_name == "2339":
-        chromosomes_i_want = [str(i) for i in range(8)]
+        # NOTE prepend a chromosome name to the integers of chromosome IDs
+        TE_Data["Chromosome"] = "2339_scaffold_" + TE_Data["Chromosome"]
+        chromosomes_i_want = ["2339_scaffold_" + str(i) for i in range(8)]
+
+    if genome_name == "H4":
+        # NOTE chromosome IDs already in a good format, just define range
+        chromosomes_i_want = ["Fvb" + str(i) for i in range(8)]
+
+    if genome_name == "502":
+        # NOTE prepend a chromosome name to the integers of chromosome IDs
+        TE_Data["Chromosome"] = "502_scaffold_" + TE_Data["Chromosome"]
+        chromosomes_i_want = ["502_scaffold_" + str(i) for i in range(8)]
+
     TE_Data = TE_Data.loc[TE_Data["Chromosome"].isin(chromosomes_i_want)]
     diagnostic(TE_Data)
-
-    if genome_name == "2339":
-        TE_Data['Chromosome'] = "Fvb" + TE_Data['Chromosome']
-        print(TE_Data)
-
     return TE_Data
+
 
 def diagnostic(TE_Data):
     print(sorted(TE_Data["Order"].unique().tolist()))

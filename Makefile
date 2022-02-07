@@ -29,34 +29,53 @@ DEV_PROCESSED_SYNTELOGS := $(DEV_RESULTS)/Syntelog_Matches.tsv
 DEV_UNBIASED_GENES := $(DEV_DATA)/Fv2339_n_Fv562_Unbiased.txt
 
 # H4 Related Analyses
-DEV_H4_GENES := $(DEV_DATA)/H4/H4_Genes.gtf
-DEV_H4_TEs := $(DEV_DATA)/H4/F_vesca_H4_V4.1.fasta.mod.EDTA.TEanno.gff
+DEV_H4_GENES := $(DEV_DATA)/H4_Genes.gtf
+DEV_H4_TEs := $(DEV_DATA)/F_vesca_H4_V4.1.fasta.mod.EDTA.TEanno.gff3
 DEV_H4_GENE_DATA := $(DEV_RESULTS)/filtered_input_data/Cleaned_H4_Genes.tsv
 DEV_H4_DENSITY_DATA := $(DEV_RESULTS)/finalized_data/H4_TE_Density
 DEV_H4_RESULTS := $(DEV_RESULTS)/graphs/H4
 
+DEV_502_GENES := $(DEV_DATA)/maker_annotation.502.gff_sorted.gff
+DEV_502_TEs := $(DEV_DATA)/502_NewNames.fasta.mod.EDTA.TEanno.gff3
 
 
 
-filter_genes:
-	@echo Filtering 562 genes into appropriate format for TE Density
+#----------------------------------------------------------
+# NOTE commands for filtering genes and TEs
+502_filter_genes:
+	python $(ROOT_DIR)/src/import_strawberry_gene_anno.py $(DEV_502_GENES) 502 --o $(ROOT_DIR)/results/filtered_input_data
+
+562_filter_genes:
 	python $(ROOT_DIR)/src/import_strawberry_gene_anno.py $(DEV_562_GENES) 562 --o $(ROOT_DIR)/results/filtered_input_data
-	@echo 
-	@echo Filtering 1008/2339 genes into appropriate format for TE Density
+
+1008_2339_filter_genes:
 	python $(ROOT_DIR)/src/import_strawberry_gene_anno.py $(DEV_1008_GENES) 2339 --o $(ROOT_DIR)/results/filtered_input_data
 
-filter_TEs:
-	@echo Filtering 562 TEs into appropriate format for TE Density
+H4_filter_genes:
+	python $(ROOT_DIR)/src/import_strawberry_gene_anno.py $(DEV_H4_GENES) H4 --o $(ROOT_DIR)/results/filtered_input_data
+
+502_filter_TEs:
+	python $(ROOT_DIR)/src/import_strawberry_EDTA.py $(DEV_502_TEs) 502 --o $(ROOT_DIR)/results/filtered_input_data
+
+562_filter_TEs:
 	python $(ROOT_DIR)/src/import_strawberry_EDTA.py $(DEV_562_TEs) 562 --o $(ROOT_DIR)/results/filtered_input_data
-	@echo 
-	@echo Filtering 1008/2339 TEs into appropriate format for TE Density
+
+1008_2339_filter_TEs:
 	python $(ROOT_DIR)/src/import_strawberry_EDTA.py $(DEV_1008_TEs) 2339 --o $(ROOT_DIR)/results/filtered_input_data
 
-calculate_TE_Density:
-	@echo Running TE Density for 562
-	sbatch $(ROOT_DIR)/src/TE_Density_562.sb
-	@echo
+H4_filter_TEs:
+	python $(ROOT_DIR)/src/import_strawberry_EDTA.py $(DEV_H4_TEs) H4 --o $(ROOT_DIR)/results/filtered_input_data
+#----------------------------------------------------------
+# NOTE TE density was then invoked to generate TE density
+#----------------------------------------------------------
 
+#----------------------------------------------------------
+# Generated sense swapped data
+# NOTE
+#python examples/general_read_density_data.py CLEANED_GENE_ANNOTATION.tsv DENSITY_DATA_FOLDER "Arabidopsis_(.*?).h5"`
+#----------------------------------------------------------
+
+# NB other, cleanup
 filter_syntelogs:
 	@echo reading raw syntelog file and fixing names
 	mkdir -p $(DEV_RESULTS)
@@ -94,16 +113,12 @@ generate_unbiased_graphs:
 	mkdir -p $(DEV_UNBIASED_RESULTS)
 	python $(ROOT_DIR)/src/compare_unbiased_exp_w_density.py $(DEV_PROCESSED_SYNTELOGS) $(DEV_562_DENSITY_DATA) $(DEV_1008_DENSITY_DATA) $(DEV_562_GENE_DATA) $(DEV_1008_GENE_DATA) $(DEV_UNBIASED_GENES) -o $(DEV_UNBIASED_RESULTS)
 
-# Code relevant to H4
-H4_filter_TEs:
-	@echo Filtering H4 TEs into appropriate format for TE Density
-	python $(ROOT_DIR)/src/H4/import_strawberry_H4_EDTA.py $(DEV_H4_TEs) H4 --o $(ROOT_DIR)/results/filtered_input_data
 
-H4_filter_genes:
-	@echo Filtering H4 genes into appropriate format for TE Density
-	python $(ROOT_DIR)/src/H4/import_strawberry_H4_gene_anno.py $(DEV_H4_GENES) H4 --o $(ROOT_DIR)/results/filtered_input_data
 
 H4_dotplot:
 	@echo Generating dotplot for H4
 	mkdir -p $(DEV_H4_RESULTS)
 	python $(ROOT_DIR)/src/H4/new_h4_dotplot.py $(DEV_H4_DENSITY_DATA) $(DEV_H4_GENE_DATA) -o $(DEV_H4_RESULTS)
+
+dev_562_dotplot:
+	python $(ROOT_DIR)/src/H4/new_h4_dotplot.py $(DEV_562_DENSITY_DATA) $(DEV_562_GENE_DATA) -o $(DEV_H4_RESULTS)

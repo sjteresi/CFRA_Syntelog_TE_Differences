@@ -58,7 +58,8 @@ def import_genes(genes_input_path, genome_id, contig_del=False):
         engine="python",
         names=col_names,
         usecols=col_to_use,
-        dtype={"Stop": "float64", "Start": "float64"},
+        dtype={"Stop": "float64", "Start": "float64", "Strand": str,
+               "FullName": str},
         comment="#",
     )
 
@@ -66,14 +67,13 @@ def import_genes(genes_input_path, genome_id, contig_del=False):
     Gene_Data = Gene_Data[Gene_Data.Feature == "gene"]  # drop non-gene rows
 
     # clean the names and set as the index (get row wrt name c.f. idx)
-
     Gene_Data["Gene_Name"] = Gene_Data["FullName"].str.extract(r"ID=(.*?);")
-
     Gene_Data.set_index("Gene_Name", inplace=True)
+
+    # Drop extraneous columns
     Gene_Data = Gene_Data.drop(columns=["FullName", "Software"])
 
-    Gene_Data.Strand = Gene_Data.Strand.astype(str)
-
+    # Edit gene length
     Gene_Data["Length"] = Gene_Data.Stop - Gene_Data.Start + 1
 
     if contig_del:
@@ -82,16 +82,28 @@ def import_genes(genes_input_path, genome_id, contig_del=False):
     Gene_Data.sort_values(by=["Chromosome", "Start"], inplace=True)
 
     # MAGIC I only want the first 7
+    # NOTE this is kind of bad form to be doing things this way, alternatively
+    # could provide some sort of input arg to handle the chromosomes I want but
+    # this is easiest to hard-code it in.
+    # NOTE chromosomes_i_want is a string variable that is set per genome and
+    # used to subset the dataframe by chromosome ID
     if genome_id == "562":
+        # NOTE chromosome IDs already in a good format, just define range
         chromosomes_i_want = ["562_scaffold_" + str(i) for i in range(8)]
-    if genome_id == "2339":
-        chromosomes_i_want = ["2339_scaffold_" + str(i) for i in range(8)]
-    Gene_Data = Gene_Data.loc[Gene_Data["Chromosome"].isin(chromosomes_i_want)]
 
     if genome_id == "2339":
-        Gene_Data["Chromosome"] = Gene_Data["Chromosome"].str.replace(
-            "2339_scaffold_", "Fvb"
-        )
+        # NOTE chromosome IDs already in a good format, just define range
+        chromosomes_i_want = ["2339_scaffold_" + str(i) for i in range(8)]
+
+    if genome_id == "502":
+        # NOTE chromosome IDs already in a good format, just define range
+        chromosomes_i_want = ["502_scaffold_" + str(i) for i in range(8)]
+
+    if genome_id == 'H4':
+        chromosomes_i_want = ["Fvb" + str(i) for i in range(8)]
+
+    Gene_Data = Gene_Data.loc[Gene_Data["Chromosome"].isin(chromosomes_i_want)]
+
     return Gene_Data
 
 

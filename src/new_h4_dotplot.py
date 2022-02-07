@@ -333,9 +333,12 @@ if __name__ == "__main__":
     # Initialize all DensityData objects for H4
     # NOTE MAGIC substring rule for matching the chromosome IDs and initializing
     # the DD objects
+    
+    # NOTE check once more if this code is ultimately used. Otherwise candidate for deletion.
     processed_H4_density_data = DensityData.from_list_gene_data_and_hdf5_dir(
         gene_data_H4_list,
         args.density_H4_data_folder,
+        #"Fragaria_562_(562_scaffold_(\d)).h5",
         "H4_(Fvb(\d)).h5",
         logger,
     )
